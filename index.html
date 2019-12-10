@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Liste de course</title>
+        <script src="vuev2_6_10.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    </head>
+    <style>
+        li.selected 
+        {
+            text-decoration-line: underline;
+            text-decoration-color: forestgreen;
+        }
+    </style>
+    <body>
+        <div id="app">
+            <header>
+                <h1>{{ title }}</h1>
+            </header>
+            <div>
+                <ul>
+                    <li v-for="item in items">
+                        <span>{{ item.label }}</span>
+                        <i class="fa fa-trash" v-on:click="removeItem(item)"></i>
+                    </li>
+                </ul>
+                <div v-if="showAddmenu">
+                    <ul>
+                        <li v-for="choicesItem in choicesItems" v-on:click="selectItem(choicesItem)" v-bind:class="{selected: choicesItem.selected}">{{ choicesItem.label }}</li>
+                    </ul>
+                    <button v-on:click="pushItems">Ajouter ces items</button>
+                </div>
+                <div>
+                    <button v-on:click="switchAddMenu">{{ btnSwitchLabel }}</button> - <button v-on:click="clearItems">Clear</button>
+                </div>
+            </div>
+            <footer>
+                <div>vrx 2020</div>
+            </footer>
+        </div>
+        <script>
+            var vm = new Vue({
+                el: '#app',
+                data: {
+                    message: 'Hello Vue!',
+                    title: 'Ma liste de course',
+                    items: [
+                        { label: 'Mon 1er item' },
+                        { label: 'Mon 2eme item' },
+                    ],
+                    choicesItems: [],
+                    showAddmenu: false,
+                    btnSwitchLabel: 'Ajouter un item'
+                },
+                methods: {
+                    switchAddMenu: function() {
+                        this.showAddmenu = !vm.showAddmenu
+                        this.btnSwitchLabel = (vm.showAddmenu) ? 'Fermer' : 'Ajouter un item';
+                    },
+                    hideAddMenu: function() {
+                        this.showAddmenu = false;
+                        this.btnSwitchLabel = (vm.showAddmenu) ? 'Fermer' : 'Ajouter un item';
+                    },
+                    selectItem: function(choicesItem) {
+                        choicesItem.selected = !choicesItem.selected;
+                    },
+                    removeItem: function(item) {
+                        var newItems = [];
+                        for (currentItem of this.items) {
+                            if (currentItem.label != item.label) {
+                                newItems.push(currentItem);
+                            }
+                        }
+                        this.items = newItems;
+                    },
+                    clearItems: function() {
+                        this.items = [];
+                        this.hideAddMenu();
+                    },
+                    pushItems: function() {
+                        for (choicesItem of this.choicesItems) {
+                            if (choicesItem.selected) {
+                                this.items.push(choicesItem);
+                            }
+                        }
+                        this.hideAddMenu();
+                        this.clearSelection();
+                    },
+                    clearSelection: function() {
+                        for (choicesItem of this.choicesItems) {
+                            choicesItem.selected = false;
+                        }
+                    }
+                },
+                created: function() {
+                    for (var i = 0; i < 10; i++) {
+                        var item = {label: 'Item '+String.fromCharCode(65+i), selected: false}
+                        this.choicesItems.push(item);
+                    }
+                },
+            })
+        </script>
+    </body>
+</html>
