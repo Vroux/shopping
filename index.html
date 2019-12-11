@@ -86,7 +86,7 @@
                     },
                     pushItems: function() {
                         for (choicesItem of this.choicesItems) {
-                            if (choicesItem.selected) {
+                            if (choicesItem.selected && !this.inItemsList(choicesItem)) {
                                 this.items.push(choicesItem);
                             }
                         }
@@ -104,6 +104,12 @@
                         for (choicesItem of this.choicesItems) {
                             choicesItem.selected = false;
                         }
+                    },
+                    inItemsList(item) {
+                        for (currentItem of this.items) {
+                            if (item.label == currentItem.label) {return true;}
+                        }
+                        return false;
                     }
                 },
                 created: function() {
