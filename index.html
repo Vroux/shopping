@@ -78,11 +78,13 @@
                         }
                         this.items = newItems;
                         this.saveItems();
+                        this.refreshChoicesItems();
                     },
                     clearItems: function() {
                         this.items = [];
                         this.hideAddMenu();
                         this.saveItems();
+                        this.refreshChoicesItems();
                     },
                     pushItems: function() {
                         for (choicesItem of this.choicesItems) {
@@ -93,19 +95,30 @@
                         this.hideAddMenu();
                         this.clearSelection();
                         this.saveItems();
+                        this.refreshChoicesItems();
                     },
                     saveItems: function() {
                         localStorage.setItem('items', JSON.stringify(this.items));
                     },
                     loadItems: function() {
                         this.items = JSON.parse(localStorage.getItem('items'));
+                        this.refreshChoicesItems(this.items);
                     },
                     clearSelection: function() {
                         for (choicesItem of this.choicesItems) {
                             choicesItem.selected = false;
                         }
                     },
-                    inItemsList(item) {
+                    refreshChoicesItems: function(items) {
+                        newChoicesItems = [];
+                        for (choicesItem of this.choicesItems) {
+                            if (!this.inItemsList(choicesItem)) {
+                                newChoicesItems.push(choicesItem);
+                            }
+                        }
+                        this.choicesItems = newChoicesItems;
+                    },
+                    inItemsList: function(item) {
                         for (currentItem of this.items) {
                             if (item.label == currentItem.label) {return true;}
                         }
