@@ -33,7 +33,10 @@
                     <button v-on:click="pushItems">Ajouter ces items</button>
                 </div>
                 <div>
-                    <button v-on:click="switchAddMenu">{{ btnSwitchLabel }}</button> - <button v-on:click="clearItems">Clear</button>
+                    <button v-on:click="switchAddMenu">{{ btnSwitchLabel }}</button>
+                     - <button v-on:click="clearItems">Clear</button>
+                     - <button v-on:click="saveItems">Save</button>
+                     - <button v-on:click="loadItems">Load</button>
                 </div>
             </div>
             <footer>
@@ -52,16 +55,16 @@
                     ],
                     choicesItems: [],
                     showAddmenu: false,
-                    btnSwitchLabel: 'Ajouter un item'
+                    btnSwitchLabel: 'Ajouter des items'
                 },
                 methods: {
                     switchAddMenu: function() {
                         this.showAddmenu = !vm.showAddmenu
-                        this.btnSwitchLabel = (vm.showAddmenu) ? 'Fermer' : 'Ajouter un item';
+                        this.btnSwitchLabel = (vm.showAddmenu) ? 'Fermer' : 'Ajouter des items';
                     },
                     hideAddMenu: function() {
                         this.showAddmenu = false;
-                        this.btnSwitchLabel = (vm.showAddmenu) ? 'Fermer' : 'Ajouter un item';
+                        this.btnSwitchLabel = (vm.showAddmenu) ? 'Fermer' : 'Ajouter des items';
                     },
                     selectItem: function(choicesItem) {
                         choicesItem.selected = !choicesItem.selected;
@@ -74,10 +77,12 @@
                             }
                         }
                         this.items = newItems;
+                        this.saveItems();
                     },
                     clearItems: function() {
                         this.items = [];
                         this.hideAddMenu();
+                        this.saveItems();
                     },
                     pushItems: function() {
                         for (choicesItem of this.choicesItems) {
@@ -87,6 +92,13 @@
                         }
                         this.hideAddMenu();
                         this.clearSelection();
+                        this.saveItems();
+                    },
+                    saveItems: function() {
+                        localStorage.setItem('items', JSON.stringify(this.items));
+                    },
+                    loadItems: function() {
+                        this.items = JSON.parse(localStorage.getItem('items'));
                     },
                     clearSelection: function() {
                         for (choicesItem of this.choicesItems) {
@@ -99,6 +111,7 @@
                         var item = {label: 'Item '+String.fromCharCode(65+i), selected: false}
                         this.choicesItems.push(item);
                     }
+                    this.loadItems();
                 },
             })
         </script>
