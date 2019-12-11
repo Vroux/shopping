@@ -23,6 +23,7 @@
                 <ul>
                     <li v-for="item in items">
                         <span>{{ item.label }}</span>
+                        <input type="number" v-model="item.qty" />
                         <i class="fa fa-trash" v-on:click="removeItem(item)"></i>
                     </li>
                 </ul>
@@ -48,11 +49,8 @@
                 el: '#app',
                 data: {
                     message: 'Hello Vue!',
-                    title: 'Ma liste de course',
-                    items: [
-                        { label: 'Mon 1er item' },
-                        { label: 'Mon 2eme item' },
-                    ],
+                    title: 'Ma liste d\'items',
+                    items: [],
                     choicesItems: [],
                     showAddmenu: false,
                     btnSwitchLabel: 'Ajouter des items'
@@ -127,7 +125,7 @@
                 },
                 created: function() {
                     for (var i = 0; i < 10; i++) {
-                        var item = {label: 'Item '+String.fromCharCode(65+i), selected: false}
+                        var item = {label: 'Item '+String.fromCharCode(65+i), selected: false, qty: 1}
                         this.choicesItems.push(item);
                     }
                     this.loadItems();
