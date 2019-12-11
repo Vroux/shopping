@@ -6,6 +6,7 @@
         <title>Liste de course</title>
         <script src="vuev2_6_10.js"></script>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     </head>
     <style>
         li.selected 
@@ -34,10 +35,13 @@
                     <button v-on:click="pushItems">Ajouter ces items</button>
                 </div>
                 <div>
-                    <button v-on:click="switchAddMenu">{{ btnSwitchLabel }}</button>
-                     - <button v-on:click="clearItems">Clear</button>
-                     - <button v-on:click="saveItems">Save</button>
-                     - <button v-on:click="loadItems">Load</button>
+                    <button v-on:click="switchAddMenu">{{ btnSwitchLabel }}</button> - <button v-on:click="clearItems">Clear</button>
+                </div>
+                <div>
+                    <button v-on:click="saveItems">Save</button> - <button v-on:click="loadItems">Load</button>
+                </div>
+                <div>
+                    <button v-on:click="loadChoicesItem">Charger les choix</button>
                 </div>
             </div>
             <footer>
@@ -52,6 +56,7 @@
                     title: 'Ma liste d\'items',
                     items: [],
                     choicesItems: [],
+                    choicesItemsUrl: 'choicesItems.json',
                     showAddmenu: false,
                     btnSwitchLabel: 'Ajouter des items'
                 },
@@ -116,6 +121,15 @@
                         }
                         this.choicesItems = newChoicesItems;
                     },
+                    loadChoicesItem: function() {
+                        axios.get(this.choicesItemsUrl)
+                            .then(function(response) {
+                                console.log(response);
+                                for (item of response.data) {
+                                    vm.choicesItems.push(item);
+                                }
+                            });
+                    },
                     inItemsList: function(item) {
                         for (currentItem of this.items) {
                             if (item.label == currentItem.label) {return true;}
@@ -124,12 +138,14 @@
                     }
                 },
                 created: function() {
-                    for (var i = 0; i < 10; i++) {
-                        var item = {label: 'Item '+String.fromCharCode(65+i), selected: false, qty: 1}
-                        this.choicesItems.push(item);
-                    }
+                    this.loadChoicesItem();
                     this.loadItems();
                 },
+                watch: {
+                    item: function() {
+                        this.saveItems();
+                    }
+                }
             })
         </script>
     </body>
