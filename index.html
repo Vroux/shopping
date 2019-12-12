@@ -121,13 +121,18 @@
                         }
                         this.choicesItems = newChoicesItems;
                     },
-                    loadChoicesItem: function() {
+                    loadChoicesItemFromRemote() {
                         axios.get(this.choicesItemsUrl)
                             .then(function(response) {
                                 for (item of response.data) {
                                     vm.choicesItems.push(item);
                                 }
                             });
+                    },
+                    loadChoicesItem: function() {
+                        if (this.choicesItems.length == 0) {
+                            this.loadChoicesItemFromRemote();
+                        }
                     },
                     inItemsList: function(item) {
                         for (currentItem of this.items) {
