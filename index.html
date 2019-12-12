@@ -124,7 +124,6 @@
                     loadChoicesItem: function() {
                         axios.get(this.choicesItemsUrl)
                             .then(function(response) {
-                                console.log(response);
                                 for (item of response.data) {
                                     vm.choicesItems.push(item);
                                 }
